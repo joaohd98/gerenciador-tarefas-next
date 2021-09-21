@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {DefaultMessageResponse} from "../../types/default-message-response";
 import {Login} from "../../types/login";
 
-const request = (
+const handler = (
   req: NextApiRequest,
   res: NextApiResponse<DefaultMessageResponse>
 ) => {
@@ -13,11 +13,11 @@ const request = (
 
     const body = req.body as Login;
 
-    if(!body.user || !body.password) {
+    if(!body.email || !body.password) {
       return res.status(400).json({msg: "Login ou senha não inseridos"});
     }
 
-    if(body.user != "admin@admin.com" || body.password != "123456") {
+    if(body.email != "admin@admin.com" || body.password != "123456") {
       return res.status(400).json({msg: "Usuario não encontrado"});
     }
 
@@ -29,4 +29,4 @@ const request = (
 
 }
 
-export default request;
+export default handler;
