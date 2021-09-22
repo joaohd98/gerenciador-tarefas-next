@@ -5,7 +5,6 @@ const connectDB = (handler: NextApiHandler) => async (req: NextApiRequest, res: 
 
   //Valido se já está conectado, e caso esteja, processa api normalmente
   if(!mongoose.connections[0].readyState) {
-    //.env
     const {DB_CONNECTION_STRING} = process.env;
 
     if(!DB_CONNECTION_STRING) {

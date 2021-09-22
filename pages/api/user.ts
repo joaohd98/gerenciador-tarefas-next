@@ -42,10 +42,12 @@ const handler = async (
       return;
     }
 
-    await UserModel.create({
+    const final = {
       ...user,
-      password: md5(user.password)
-    });
+      password : md5(user.password)
+    }
+
+    await UserModel.create(final);
 
     res.status(200).json({msg: "Usuario criado com sucesso"})
 
