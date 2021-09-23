@@ -5,17 +5,21 @@ import {Task} from "../../types/task";
 import {TaskModel} from "../../models/task-model";
 import JwtValidator from "../../middleware/jwt-validator";
 import {UserModel} from "../../models/user-model";
+import {GetTaskQueryParams} from "../../types/get-task-query-params";
+import {TaskStatusEnum} from "../../types/task-status-enum";
 
 const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<DefaultMessageResponse>
+  res: NextApiResponse<DefaultMessageResponse | Task[]>
 ) => {
   try {
     if(req.method == "POST") {
-      saveTask(req, res);
+      await saveTask(req, res);
       return;
     }
     else if(req.method == "GET") {
+      await getTasks(req, res);
+      return;
     }
     else if(req.method == "PUT") {
     }
@@ -37,16 +41,11 @@ const saveTask = async (
     res.status(500).json({error: "Parametros de entrada invalido"});
   }
 
-  const userId = req.body.userId;
+  const userId = req?.body?.userId;
+  const failedValidation = await validateUser(userId);
 
-  if(!userId) {
-    return res.status(400).json({error: "usuario invalido"});
-  }
-
-  const userFound = await UserModel.findById(userId);
-
-  if(!userFound) {
-    return res.status(400).json({error: "usuario não encontrado"});
+  if(failedValidation) {
+    return res.status(400).json({error: failedValidation});
   }
 
   const task = req.body as Task;
@@ -71,4 +70,61 @@ const saveTask = async (
 
 }
 
+const getTasks = async (
+  req: NextApiRequest,
+  res: NextApiResponse<DefaultMessageResponse | Task[]>
+) => {
+  const userId = req?.body?.userId || req?.query?.userId;
+  const failedValidation = await validateUser(userId);
+
+  if(failedValidation) {
+    return res.status(400).json({error: failedValidation});
+  }
+
+  const params = req.query as GetTaskQueryParams
+  const query = {
+    userId,
+  } as any;
+
+  if(params?.finishPrevisionStart){
+    const inputDate = new Date(params.finishPrevisionStart);
+    query.finishPrevisionDate = { $gte : inputDate}
+  }
+
+  if(params?.finishPrevisionEnd){
+    const lastDate = new Date(params.finishPrevisionEnd);
+
+    query.finishPrevisionDate = {
+      ...query.finishPrevisionDate,
+      $lte: lastDate
+    }
+  }
+
+  if(params?.status) {
+    switch (parseInt(params.status as any)) {
+      case TaskStatusEnum.Active: query.finishDate = null; break;
+      case TaskStatusEnum.Finished: query.finishDate = {$ne: null}; break;
+    }
+  }
+
+  console.log("query", query);
+  const result = await TaskModel.find(query) as Task[];
+  console.log("result", result);
+
+  return res.status(200).json(result);
+}
+
+const validateUser = async (userId: string) => {
+  if(!userId) {
+    return "usuario invalido";
+  }
+
+  const userFound = await UserModel.findById(userId);
+
+  if(!userFound) {
+    return "usuario não encontrado";
+  }
+
+  return false;
+}
 export default connectDB(JwtValidator(handler));
