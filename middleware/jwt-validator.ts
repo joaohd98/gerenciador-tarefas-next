@@ -45,7 +45,7 @@ const JwtValidator = (handler: NextApiHandler) => async (req: NextApiRequest, re
   } catch {
     return res.status(500).json({error: "Ocorreu erro ao tratar token JWT"});
   }
-  
+
   return handler(req, res);
 
 }
