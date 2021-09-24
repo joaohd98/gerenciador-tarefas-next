@@ -13,39 +13,43 @@ const handler = async (
   res: NextApiResponse<DefaultMessageResponse | Task[]>
 ) => {
   try {
+    const userId = req?.body?.userId || req?.query?.userId;
+    const failedValidation = await validateUser(userId);
+
+    if(failedValidation) {
+      return res.status(400).json({error: failedValidation});
+    }
+
     if(req.method == "POST") {
-      await saveTask(req, res);
+      await saveTask(req, res, userId);
       return;
     }
     else if(req.method == "GET") {
-      await getTasks(req, res);
+      await getTasks(req, res, userId);
       return;
     }
     else if(req.method == "PUT") {
+      await updateTask(req, res, userId);
+      return;
     }
     else if(req.method == "DELETE") {
+      await deleteTask(req, res, userId);
+      return;
     }
 
   } catch (e) {
-    console.log("Ocorreu ao gerenciar tarefa task: ", e)
+    console.log("Ocorreu erro ao gerenciar tarefa task: ", e)
     res.status(500).json({error: "Ocorreu ao gerenciar tarefa task"});
   }
 }
 
 const saveTask = async (
   req: NextApiRequest,
-  res: NextApiResponse<DefaultMessageResponse>
-) => {
+  res: NextApiResponse<DefaultMessageResponse>,
+  userId: string) => {
 
   if(!req.body) {
     res.status(500).json({error: "Parametros de entrada invalido"});
-  }
-
-  const userId = req?.body?.userId;
-  const failedValidation = await validateUser(userId);
-
-  if(failedValidation) {
-    return res.status(400).json({error: failedValidation});
   }
 
   const task = req.body as Task;
@@ -64,7 +68,7 @@ const saveTask = async (
     finishDate: undefined,
   }
 
-  await TaskModel.create(final);
+  await TaskModel.updateOne(final);
 
   return res.status(200).json({msg: "Tarefa criada com sucesso"});
 
@@ -72,15 +76,8 @@ const saveTask = async (
 
 const getTasks = async (
   req: NextApiRequest,
-  res: NextApiResponse<DefaultMessageResponse | Task[]>
-) => {
-  const userId = req?.body?.userId || req?.query?.userId;
-  const failedValidation = await validateUser(userId);
-
-  if(failedValidation) {
-    return res.status(400).json({error: failedValidation});
-  }
-
+  res: NextApiResponse<DefaultMessageResponse | Task[]>,
+  userId: string) => {
   const params = req.query as GetTaskQueryParams
   const query = {
     userId,
@@ -107,11 +104,72 @@ const getTasks = async (
     }
   }
 
-  console.log("query", query);
   const result = await TaskModel.find(query) as Task[];
-  console.log("result", result);
 
   return res.status(200).json(result);
+}
+
+const deleteTask = async (
+  req: NextApiRequest,
+  res: NextApiResponse<DefaultMessageResponse>,
+  userId: string) => {
+  const taskFound = await validateIdTaskAndReturnValue(req, userId);
+
+  if(!taskFound) {
+    return res.status(400).json({error: "Tarefa não encontrada"});
+  }
+
+  await TaskModel.findByIdAndDelete(taskFound._id);
+  return res.status(200).json({msg: "Tarefa deletada com sucesso"});
+}
+
+const updateTask = async (
+  req: NextApiRequest,
+  res: NextApiResponse<DefaultMessageResponse>,
+  userId: string) => {
+  const taskFound = await validateIdTaskAndReturnValue(req, userId);
+
+  if(!taskFound) {
+    return res.status(400).json({error: "Tarefa não encontrada"});
+  }
+
+  if(!req.body) {
+    return res.status(500).json({error: "Parametros de entrada invalidos"});
+  }
+
+  const task = req.body as Task;
+
+  if(task.name && task.name.trim() != "") {
+    taskFound.name = task.name;
+  }
+
+  if(task.finishPrevisionDate) {
+    taskFound.finishPrevisionDate = task.finishPrevisionDate;
+  }
+
+
+  if(task.finishDate) {
+    taskFound.finishDate = task.finishDate;
+  }
+
+  await TaskModel.findByIdAndUpdate(taskFound._id, taskFound);
+
+  return res.status(200).json({msg: "Tarefa atualizada com sucesso com sucesso"});
+}
+
+const validateIdTaskAndReturnValue = async (req: NextApiRequest, userId: string) => {
+  const id = req?.body?.id || req?.query?.id;
+
+  if(!id || id.trim() == "") {
+    return null;
+  }
+
+  const taskFound = await TaskModel.findById(id);
+  if(!taskFound || taskFound.userId != userId) {
+    return null;
+  }
+
+  return taskFound;
 }
 
 const validateUser = async (userId: string) => {
