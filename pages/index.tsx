@@ -3,15 +3,15 @@ import type { NextPage } from 'next'
 const Home: NextPage = () => {
   return (
     <div className={"container-login"}>
-      <img src={"/logo.svg"} alt={"logo fiap"}/>
+      <img className={"logo"} src={"/logo.svg"} alt={"logo fiap"}/>
       <form>
-        <div className={"container-input"}>
+        <div className={"input"}>
           <img src={"/mail.svg"} alt={"email"} />
-          <input type={"email"}/>
+          <input type={"email"} placeholder={"Email"}/>
         </div>
-        <div className={"container-input"}>
+        <div className={"input"}>
           <img src={"/lock.svg"} alt={"password"} />
-          <input type={"password"}/>
+          <input type={"password"} placeholder={"Senha"}/>
         </div>
         <button>LOGIN</button>
       </form>
