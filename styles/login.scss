@@ -8,6 +8,15 @@
     padding-bottom: 30px;
   }
 
+  p {
+    align-self: center;
+    font-weight: bold;
+    color: $errorColor;
+    text-align: center;
+    max-width: 300px;
+  }
+
+
   .input {
     display: flex;
     flex-direction: row;
@@ -40,6 +49,7 @@
         color: $mediumGrayColor;
         opacity: 1;
       }
+
     }
   }
 
@@ -53,6 +63,10 @@
     margin-top: 30px;
     font-size: 16px;
     font-weight: 600;
+
+    &:disabled {
+      background-color: $darkGrayColor;
+    }
   }
 
   @media screen and (min-width: 1024px) {
@@ -64,6 +78,10 @@
       width: 420px;
       display: block;
       margin: auto 7.5% auto auto;
+    }
+
+    p {
+      max-width: none;
     }
 
     form {

@@ -1,22 +1,23 @@
 import type { NextPage } from 'next'
+import {Login} from "../container/login";
+import {useEffect, useState} from "react";
+import {Home} from "../container/home";
 
-const Home: NextPage = () => {
-  return (
-    <div className={"container-login"}>
-      <img className={"logo"} src={"/logo.svg"} alt={"logo fiap"}/>
-      <form>
-        <div className={"input"}>
-          <img src={"/mail.svg"} alt={"email"} />
-          <input type={"email"} placeholder={"Email"}/>
-        </div>
-        <div className={"input"}>
-          <img src={"/lock.svg"} alt={"password"} />
-          <input type={"password"} placeholder={"Senha"}/>
-        </div>
-        <button>LOGIN</button>
-      </form>
-    </div>
-  )
+const Index: NextPage = () => {
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    if(typeof window != "undefined") {
+      const token  = localStorage.getItem("accessToken") as string;
+
+      if(token) {
+        setAccessToken(token);
+      }
+    }
+  }, []);
+
+  return accessToken ? <Home setAccessToken={setAccessToken} /> : <Login setAccessToken={setAccessToken} />;
 }
 
-export default Home
+
+export default Index

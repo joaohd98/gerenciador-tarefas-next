@@ -22,16 +22,16 @@ const handler = async (
     const {MY_SECRET_KEY_} = process.env;
 
     if(!MY_SECRET_KEY_) {
-      return res.status(400).json({msg: "ENV MY_SECRET_KEY não encontrado"});
+      return res.status(400).json({error: "ENV MY_SECRET_KEY não encontrado"});
     }
     if(!auth.email || !auth.password) {
-      return res.status(400).json({msg: "Login ou senha não inseridos"});
+      return res.status(400).json({error: "Login ou senha não inseridos"});
     }
 
     const userFound = await UserModel.find({email: auth.email, password: md5(auth.password)});
 
     if(!userFound || userFound.length == 0) {
-      return res.status(400).json({msg: "Usuario não encontrado"});
+      return res.status(400).json({error: "Usuario não encontrado"});
     }
 
     const user = userFound[0] as User;
