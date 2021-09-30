@@ -1,0 +1,91 @@
+@import './config.scss';
+
+.container-filters{
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  background-color: $lightGrayColor;
+  border-radius: 12px;
+  padding: 10px;
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      font-size: 18px;
+      letter-spacing: 0.01em;
+      color: $primaryColor;
+      font-weight: bold
+    }
+
+    img {
+      cursor: pointer;
+    }
+  }
+
+  .form {
+    display: none;
+  }
+
+  .filters-mobile {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+    div {
+      display: flex;
+      padding-bottom: 8px;
+      justify-content: space-around;
+
+      label {
+        color: $primaryColor;
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @media screen and (min-width:1024px) {
+    padding: 20px;
+
+    .title {
+      img {
+        display: none;
+      }
+    }
+
+    .form  {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      label {
+        color: $primaryColor;
+        font-size: 16px;
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 0;
+      }
+
+      input, select {
+        border-color: $primaryColor;
+      }
+
+      .line {
+        border-left: 1px solid $primaryColor;
+        width: 0;
+        height: 40px;
+        margin-left: 15px;
+      }
+    }
+
+    .filters-mobile {
+      display: none;
+    }
+  }
+}

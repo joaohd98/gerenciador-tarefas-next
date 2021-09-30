@@ -32,3 +32,45 @@ body {
 
 @import "./login.scss";
 @import "./header.scss";
+@import "./filters.scss";
+@import "./list.scss";
+
+input, select {
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0.01em;
+  color: $primaryColor;
+  min-width: 100px;
+  background-color: transparent;
+  font-family: "Biennale-Regular";
+  align-self: center;
+
+  border-top-width: 0;
+  border-left-width: 0;
+  border-bottom-width: 0.01em;
+  border-right-width: 0;
+  border-color: $mediumGrayColor;
+
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: $primaryColor;
+  }
+
+  &::placeholder &::-ms-input-placeholder &:-ms-input-placeholder {
+    color: $mediumGrayColor;
+    opacity: 1;
+  }
+
+  @media screen and (min-width:1024px) {
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: $mediumGrayColor;
+    padding: 5px;
+    outline: none;
+  }
+}
+
