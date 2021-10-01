@@ -1,0 +1,57 @@
+@import './config.scss';
+
+.container-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: $lightGrayColor;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 10px;
+  height: 65px;
+  width: 95%;
+
+  img {
+    width: 18px;
+    margin-right: 15px;
+  }
+
+  div {
+    p {
+      margin: 0;
+      color: $darkGrayColor;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: left;
+
+      &.finished {
+        text-decoration: line-through;
+      }
+    }
+
+    span {
+      text-align: left;
+      color: $darkGrayColor;
+      font-size: 14px;
+    }
+
+  }
+
+
+  @media screen and (min-width:1024px) {
+    height: 80px;
+    padding: 20px;
+
+    img {
+      width: 20px;
+    }
+
+    &.active {
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid $primaryColor;
+      }
+    }
+  }
+}
