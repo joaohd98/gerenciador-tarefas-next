@@ -1,6 +1,19 @@
 @import "./config.scss";
 
-.container-login {
+.container-register {
+
+  .back-container {
+    margin-bottom: 30px;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    button {
+      width: fit-content;
+      background: transparent;
+      color: $primaryColor;
+    }
+  }
+
   .logo {
     width: 180px;
     display: block;
@@ -21,12 +34,6 @@
     display: flex;
     flex-direction: row;
     padding: 10px;
-
-    img {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-    }
 
     input {
       width: 224px;
@@ -69,24 +76,17 @@
     }
   }
 
-  .register-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-
-    .button-register {
-      width: fit-content;
-      background: transparent;
-      color: $primaryColor;
-      margin-top: 20px;
-    }
-  }
-
-
   @media screen and (min-width: 1024px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    .form-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
+
+    .back-container {
+      margin-left: -50px;
+
+    }
 
     .logo {
       width: 420px;
@@ -104,7 +104,6 @@
       padding: 80px 40px;
 
       .input {
-
         input {
           width: 343px;
         }
