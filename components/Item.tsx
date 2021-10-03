@@ -4,9 +4,10 @@ import moment from "moment";
 
 type ItemProps = {
   task: Task;
+  onSelectTask: (task: Task) => void;
 }
 
-const Item: NextPage<ItemProps> = ({task}) => {
+const Item: NextPage<ItemProps> = ({task, onSelectTask}) => {
   const getDate = (finishDate: Date | undefined, finishPrevisionDate: Date) => {
     if(finishDate) {
       return `Concluido em ${moment(finishDate).format("DD/MM/yyyy")}`
@@ -15,7 +16,7 @@ const Item: NextPage<ItemProps> = ({task}) => {
     return `Previsão de conclusão em ${moment(finishPrevisionDate).format("DD/MM/yyyy")}`
   }
   return (
-    <div className={`container-item ${!task.finishDate && "active"}`}>
+    <div className={`container-item ${!task.finishDate && "active"}`} onClick={task.finishDate ? () => onSelectTask(task) : () => {}}>
       <img src={task.finishDate ? "/check.svg" : "/uncheck.svg"} alt={task.finishDate ? "Tarefa Concluida" : "Tarefa não concluida"} />
       <div>
         <p className={task.finishDate && "finished"}>{task.name}</p>

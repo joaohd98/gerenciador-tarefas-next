@@ -7,6 +7,7 @@ import JwtValidator from "../../middleware/jwt-validator";
 import {UserModel} from "../../models/user-model";
 import {GetTaskQueryParams} from "../../types/get-task-query-params";
 import {TaskStatusEnum} from "../../types/task-status-enum";
+import moment from "moment";
 
 const handler = async (
   req: NextApiRequest,
@@ -58,7 +59,7 @@ const saveTask = async (
     return res.status(400).json({error: "Nome da tarefa invalida"});
   }
 
-  if(!task.finishPrevisionDate || new Date(task.finishPrevisionDate).getDate() < new Date().getDate()) {
+  if(!task.finishPrevisionDate || moment(task.finishPrevisionDate).isBefore(moment())) {
     return res.status(400).json({error: "Data de previsão invalida ou menor que o dia de hoje"});
   }
 
@@ -68,7 +69,7 @@ const saveTask = async (
     finishDate: undefined,
   }
 
-  await TaskModel.updateOne(final);
+  await TaskModel.create(final);
 
   return res.status(200).json({msg: "Tarefa criada com sucesso"});
 
@@ -103,6 +104,7 @@ const getTasks = async (
       case TaskStatusEnum.Finished: query.finishDate = {$ne: null}; break;
     }
   }
+
 
   const result = await TaskModel.find(query) as Task[];
 
