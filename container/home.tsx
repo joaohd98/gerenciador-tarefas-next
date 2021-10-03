@@ -106,7 +106,7 @@ export const Home: NextPage<AccessTokenProxy> = ({
 
   return (
     <>
-      <Header logout={logout} showModal={closeModal}/>
+      <Header logout={logout} showModal={() => setShowModal(true)}/>
       <Filters
         finishPrevisionStart={finishPrevisionStart}
         finishPrevisionEnd={finishPrevisionEnd}

@@ -27,21 +27,22 @@ const List: NextPage<ListProps> = ({tasks, getFilteredList}) => {
     try{
       e.preventDefault();
 
-      if(!name || !finishPrevisionDate){
-        setMsgError('Favor preencher o nome e data de previsão');
+      if(!id || !name || !finishPrevisionDate){
+        setMsgError('Favor preencher id, nome e data de previsão');
         setLoading(false);
         return;
       }
 
       const body = {
         name,
-        finishPrevisionDate
+        finishPrevisionDate,
+        finishDate
       }
 
-      const result = await executeRequest('task' + id, 'POST', body);
+      const result = await executeRequest('task?id=' + id, 'PUT', body);
 
       if(!result || !result.data){
-        setMsgError('Nao foi possivel salvar a tarefa!');
+        setMsgError('Nao foi possivel atualizar a tarefa!');
         return;
       }
 
@@ -99,8 +100,8 @@ const List: NextPage<ListProps> = ({tasks, getFilteredList}) => {
   const selectTaskToEdit = (task: Task) => {
     setId(task._id);
     setName(task.name);
-    setFinishPrevisionDate(moment(task.finishPrevisionDate).format("DD/MM/yyyy"));
-    setFinishDate(task.finishDate ? moment(task.finishDate).format("DD/MM/yyyy") : "");
+    setFinishPrevisionDate(moment(task.finishPrevisionDate).format());
+    setFinishDate(task.finishDate ? moment(task.finishDate).format() : "");
     setShowModal(true);
   }
 

@@ -69,6 +69,12 @@
     }
   }
 
+  a {
+    text-align: center;
+    color: red;
+  }
+
+
   @media screen and (min-width: 1024px) {
     display: flex;
     flex-direction: row;

@@ -10,13 +10,13 @@ type ItemProps = {
 const Item: NextPage<ItemProps> = ({task, onSelectTask}) => {
   const getDate = (finishDate: Date | undefined, finishPrevisionDate: Date) => {
     if(finishDate) {
-      return `Concluido em ${moment(finishDate).format("DD/MM/yyyy")}`
+      return `Concluido em ${moment(finishDate, "yyyy-MM-DD").format("DD/MM/yyyy")}`
     }
 
-    return `Previsão de conclusão em ${moment(finishPrevisionDate).format("DD/MM/yyyy")}`
+    return `Previsão de conclusão em ${moment(finishPrevisionDate, "yyyy-MM-DD").format("DD/MM/yyyy")}`
   }
   return (
-    <div className={`container-item ${!task.finishDate && "active"}`} onClick={task.finishDate ? () => onSelectTask(task) : () => {}}>
+    <div className={`container-item ${!task.finishDate && "active"}`} onClick={task.finishDate ? undefined : () => onSelectTask(task)}>
       <img src={task.finishDate ? "/check.svg" : "/uncheck.svg"} alt={task.finishDate ? "Tarefa Concluida" : "Tarefa não concluida"} />
       <div>
         <p className={task.finishDate && "finished"}>{task.name}</p>
