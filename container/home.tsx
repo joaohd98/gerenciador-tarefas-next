@@ -7,7 +7,6 @@ import {useEffect, useState} from "react";
 import {Task} from "../types/task";
 import {Footer} from "../components/footer";
 import {executeRequest} from "../services/api";
-import {stat} from "fs";
 import {Modal, ModalBody, ModalFooter} from "react-bootstrap";
 
 export const Home: NextPage<AccessTokenProxy> = ({
@@ -53,8 +52,8 @@ export const Home: NextPage<AccessTokenProxy> = ({
         return;
       }
       setTasks(result.data);
-    } catch {
-
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -116,7 +115,7 @@ export const Home: NextPage<AccessTokenProxy> = ({
         setFinishPrevisionStart={setFinishPrevisionStart}
         setFinishPrevisionEnd={setFinishPrevisionEnd}
       />
-      <List tasks={tasks} />
+      <List tasks={tasks} getFilteredList={getFilteredList} />
       <Footer showModal={() => setShowModal(true)} />
       <Modal show={showModal} onHide={() => setShowModal(false)} className={"container-modal"}>
         <ModalBody>
