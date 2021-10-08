@@ -7,6 +7,7 @@ import md5 from "md5";
 import {User} from "../../types/user";
 import jwt from 'jsonwebtoken';
 import {LoginResponse} from "../../types/login-response";
+import corsHandler from "../../middleware/cors";
 
 const handler = async (
   req: NextApiRequest,
@@ -51,4 +52,4 @@ const handler = async (
 
 }
 
-export default connectDB(handler);
+export default corsHandler(connectDB(handler));

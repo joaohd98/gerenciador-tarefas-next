@@ -4,6 +4,7 @@ import {User} from "../../types/user";
 import connectDB from "../../middleware/connect-db";
 import {UserModel} from "../../models/user-model";
 import md5 from "md5";
+import corsHandler from "../../middleware/cors";
 
 const handler = async (
   req: NextApiRequest,
@@ -57,4 +58,4 @@ const handler = async (
   }
 }
 
-export default connectDB(handler);
+export default corsHandler(connectDB(handler));

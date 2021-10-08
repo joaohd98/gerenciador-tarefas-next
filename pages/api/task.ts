@@ -8,6 +8,7 @@ import {UserModel} from "../../models/user-model";
 import {GetTaskQueryParams} from "../../types/get-task-query-params";
 import {TaskStatusEnum} from "../../types/task-status-enum";
 import moment from "moment";
+import corsHandler from "../../middleware/cors";
 
 const handler = async (
   req: NextApiRequest,
@@ -187,4 +188,4 @@ const validateUser = async (userId: string) => {
 
   return false;
 }
-export default connectDB(JwtValidator(handler));
+export default corsHandler(connectDB(JwtValidator(handler)));
