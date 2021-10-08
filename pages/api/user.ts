@@ -4,11 +4,11 @@ import {User} from "../../types/user";
 import connectDB from "../../middleware/connect-db";
 import {UserModel} from "../../models/user-model";
 import md5 from "md5";
-import corsHandler from "../../middleware/cors";
+import jwt from "jsonwebtoken";
 
 const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse<DefaultMessageResponse>
+  res: NextApiResponse<DefaultMessageResponse | {token: string}>
 ) => {
   try {
     if(req.method != "POST") {
@@ -20,6 +20,12 @@ const handler = async (
     }
 
     const user = req.body as User;
+
+    const {MY_SECRET_KEY_} = process.env;
+
+    if(!MY_SECRET_KEY_) {
+      return res.status(400).json({error: "ENV MY_SECRET_KEY não encontrado"});
+    }
 
     if(!user.name || !user.email || !user.password) {
       return res.status(400).json({error: "Um ou mais campos faltando"});
@@ -48,9 +54,9 @@ const handler = async (
       password : md5(user.password)
     }
 
-    await UserModel.create(final);
+    const {_id} = await UserModel.create(final);
 
-    res.status(200).json({msg: "Usuario criado com sucesso"})
+    res.status(200).json({token: jwt.sign({_id}, MY_SECRET_KEY_)})
 
   } catch (e) {
     console.log("Ocorreu erro ao criar usuário: ", e)
@@ -58,4 +64,4 @@ const handler = async (
   }
 }
 
-export default corsHandler(connectDB(handler));
+export default connectDB(handler);

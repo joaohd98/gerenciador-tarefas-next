@@ -1,5 +1,4 @@
 import {NextPage} from "next";
-import {AccessTokenProxy} from "../types/acess-token-proxy";
 import {Header} from "../components/header";
 import {Filters} from "../components/filters";
 import {List} from "../components/list";
@@ -7,11 +6,14 @@ import {useEffect, useState} from "react";
 import {Task} from "../types/task";
 import {Footer} from "../components/footer";
 import {executeRequest} from "../services/api";
-import {stat} from "fs";
 import {Modal, ModalBody, ModalFooter} from "react-bootstrap";
 
-export const Home: NextPage<AccessTokenProxy> = ({
-  setAccessToken
+type HomeProps = {
+  onLogout: () => void;
+}
+
+export const Home: NextPage<HomeProps> = ({
+  onLogout
 }) => {
   const [tasks,setTasks] = useState<Task[]>([]);
   const [finishPrevisionStart, setFinishPrevisionStart] = useState("");
@@ -27,14 +29,6 @@ export const Home: NextPage<AccessTokenProxy> = ({
   useEffect(() => {
     getFilteredList();
   }, [finishPrevisionStart, finishPrevisionEnd, status]);
-
-
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    setAccessToken('');
-  }
 
   const getFilteredList = async () => {
     try {
@@ -53,8 +47,8 @@ export const Home: NextPage<AccessTokenProxy> = ({
         return;
       }
       setTasks(result.data);
-    } catch {
-
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -107,7 +101,7 @@ export const Home: NextPage<AccessTokenProxy> = ({
 
   return (
     <>
-      <Header logout={logout} showModal={closeModal}/>
+      <Header logout={onLogout} showModal={() => setShowModal(true)}/>
       <Filters
         finishPrevisionStart={finishPrevisionStart}
         finishPrevisionEnd={finishPrevisionEnd}
@@ -116,7 +110,7 @@ export const Home: NextPage<AccessTokenProxy> = ({
         setFinishPrevisionStart={setFinishPrevisionStart}
         setFinishPrevisionEnd={setFinishPrevisionEnd}
       />
-      <List tasks={tasks} />
+      <List tasks={tasks} getFilteredList={getFilteredList} />
       <Footer showModal={() => setShowModal(true)} />
       <Modal show={showModal} onHide={() => setShowModal(false)} className={"container-modal"}>
         <ModalBody>

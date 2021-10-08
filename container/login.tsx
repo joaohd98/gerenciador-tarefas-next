@@ -1,10 +1,15 @@
 import type { NextPage } from 'next'
 import {useState} from "react";
 import {executeRequest} from "../services/api";
-import {AccessTokenProxy} from "../types/acess-token-proxy";
 
-export const Login: NextPage<AccessTokenProxy> = ({
-  setAccessToken
+type LoginProps = {
+  onEnter: (name: string, email: string, token: string) => void;
+  onClickRegister: () => void;
+}
+
+export const Login: NextPage<LoginProps> = ({
+  onEnter,
+  onClickRegister
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,11 +40,7 @@ export const Login: NextPage<AccessTokenProxy> = ({
         setMsgError('Nao foi possivel processar login tente novamente!');
       }
 
-      localStorage.setItem('accessToken', result.data.token);
-      localStorage.setItem('userName', result.data.name);
-      localStorage.setItem('userEmail', result.data.email);
-      setAccessToken(result.data.token);
-
+      onEnter(result.data.name, result.data.email, result.data.token);
     } catch(e : any){
       if(e?.response?.data?.error){
         setMsgError(e?.response?.data?.error);
@@ -67,6 +68,9 @@ export const Login: NextPage<AccessTokenProxy> = ({
         </div>
         <button className={isLoading ? "disabled" : ""} type="button" onClick={doLogin} disabled={isLoading}>{isLoading ? "...Carregando" : "Login"}</button>
       </form>
+      <div className={"register-container"}>
+        <button className={"button-register"} onClick={onClickRegister}>Cadastrar</button>
+      </div>
     </div>
   )
 }
