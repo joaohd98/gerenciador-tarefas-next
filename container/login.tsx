@@ -66,11 +66,11 @@ export const Login: NextPage<LoginProps> = ({
           <img src={"/lock.svg"} alt={"password"} />
           <input type={"password"} placeholder={"Senha"} value={password} onChange={event => setPassword(event.target.value)}/>
         </div>
-        <button className={isLoading ? "disabled" : ""} type="button" onClick={doLogin} disabled={isLoading}>{isLoading ? "...Carregando" : "Login"}</button>
+        <button className={isLoading ? "disabled" : ""} type="submit" onClick={doLogin} disabled={isLoading}>{isLoading ? "...Carregando" : "Login"}</button>
+        <div className={"register-container"}>
+          <button className={"button-register"} onClick={onClickRegister}>Cadastrar</button>
+        </div>
       </form>
-      <div className={"register-container"}>
-        <button className={"button-register"} onClick={onClickRegister}>Cadastrar</button>
-      </div>
     </div>
   )
 }
