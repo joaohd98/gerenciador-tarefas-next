@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {DefaultMessageResponse} from "../../types/default-message-response";
 import {User} from "../../types/user";
-import connectDB from "../../middleware/connect-db";
 import {UserModel} from "../../models/user-model";
 import md5 from "md5";
 import jwt from "jsonwebtoken";
+import corsHandler from "../../middleware/cors";
+import connectDB from "../../middleware/connect-db";
 
 const handler = async (
   req: NextApiRequest,
@@ -64,4 +65,4 @@ const handler = async (
   }
 }
 
-export default connectDB(handler);
+export default corsHandler(connectDB(handler));
